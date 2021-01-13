@@ -1,7 +1,3 @@
-// Test script
-//12 jan 
-10:25
-10:31
 mean(Production$SGR)
 mean(Growth$SGR)
 library(dplyr)
@@ -13,3 +9,11 @@ df.production<- data.frame(aggregate(cbind(Production$SGR) ~ Production$size + P
 print(df.production)
 write_xlsx(df.production,"C:/Users/eveli/Documents/Wageningen University/MSc Thesis/Nieuwe thesis - cleaning interval/Data\\Mean Production.xlsx")
 Growth %>% count(Growth$size, Growth$species, Growth$date, Growth$cleaning)
+plot(df.growth$V1 ~ df.growth$Growth.date, data=subset(df.growth,df.growth$Growth.species=='Acropora formosa'& df.growth$Growth.cleaning=='1' & df.growth$Growth.size=='1'))
+title(main = "Acropora formosa - weekly cleaning")
+barplot(df.growth$V1, main="Acropora formosa- weekly cleaned",xlab="Date (month)", ylab="SGR (/d)")
+barplot(subset(df.growth$v1, df.growth$Growth.species=='Acropora formosa'& df.growth$Growth.cleaning=='1' & df.growth$Growth.size=='1'))
+ggplot(df.growth, aes(fill=Growth.species, y=V1, x=Growth.size)) + geom_bar(position="dodge", stat="identity")
+ggplot(df.growth, aes(fill=Growth.species, y=V1, x=Growth.size)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Growth.cleaning + Growth.species)
+ggplot(df.production, aes(fill=Production.species, y=V1, x=Production.size)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Production.cleaning + Production.species)
+
