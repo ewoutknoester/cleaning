@@ -86,3 +86,5 @@ qqline(Survival_kopie$survival, col = "steelblue", lwd = 2)
 #QQ plot transformed data
 Production %>% ggplot(aes(sample = sqrt.production)) + geom_qq() + geom_qq_line() + facet_wrap(~Production$species + Production$cleaning + Production$size, scales = "free_y")
 
+anov.growth <- anova_test(data = Growth, dv = Growth$SGR, wid = id, within = c(Growth$species, Growth$cleaning, Growth$size, Growth$date))
+
