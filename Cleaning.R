@@ -6,7 +6,7 @@
 
 # Set R and packages
 rm(list=ls()) # Clear workspace
-setwd("C:/Users/knoes002/OneDrive/Documenten/Shimoni/DATA/R/Cleaning/cleaning")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 library(dplyr)
 library(data.table)
