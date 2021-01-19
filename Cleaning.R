@@ -64,6 +64,11 @@ ggplot(df.survival_kopie, aes(fill=Survival_kopie.size, y=V1, x=Survival_kopie.d
 hist(Growth$SGR, main="Histogram for SGR - Growth", xlab="SGR",las=1, breaks=50)
 hist(Production$SGR, main="Histogram for SGR - Production", xlab="SGR",las=1, breaks=100)
 hist(Survival_kopie$survival, main="Histogram for survival", xlab="SGR",las=1, breaks=10)
+hist(sqrt.production, main="Histogram for SGR - Production (transformed)", xlab="SGR",las=1, breaks=100)
+
+Growth %>% ggplot(aes(sample = Growth$SGR)) + geom_qq() + geom_qq_line() + facet_wrap(~Growth$species + Growth$cleaning + Growth$size, scales = "free_y")
+Production %>% ggplot(aes(sample = Production$SGR)) + geom_qq() + geom_qq_line() + facet_wrap(~Production$species + Production$cleaning + Production$size, scales = "free_y")
+
 
 ggplot(Growth, aes(x = SGR)) + geom_histogram(aes(color = SGR, fill = SGR), position = "identity", bins = 30, alpha = 0.4) + scale_color_manual(values = c("#00AFBB", "#E7B800")) + scale_fill_manual(values = c("#00AFBB", "#E7B800")) + facet_wrap(~Growth$species + Growth$cleaning + Growth$size)
 ggplot(Production, aes(x = SGR)) + geom_histogram(aes(color = SGR, fill = SGR), position = "identity", bins = 30, alpha = 0.4) + scale_color_manual(values = c("#00AFBB", "#E7B800")) + scale_fill_manual(values = c("#00AFBB", "#E7B800")) + facet_wrap(~Production$species + Production$cleaning + Production$size)
@@ -78,4 +83,6 @@ qqline(Production$SGR, col = "steelblue", lwd = 2)
 qqnorm(Survival_kopie$survival)
 qqline(Survival_kopie$survival, col = "steelblue", lwd = 2)
 
+#QQ plot transformed data
+Production %>% ggplot(aes(sample = sqrt.production)) + geom_qq() + geom_qq_line() + facet_wrap(~Production$species + Production$cleaning + Production$size, scales = "free_y")
 
