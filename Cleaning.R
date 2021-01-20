@@ -20,7 +20,7 @@ df.production <- read.csv("Production.csv", check.names = FALSE, header = TRUE)
 df.production <- setDT(df.production)
 df.production$species <- factor(df.production$species)
 df.production$size <- factor(df.production$size, labels = c("Small", "Normal", "Large"))
-df.production$cleaning <- factor(df.production$cleaning, levels = c(4,1,2,3), labels = c("Never", "Weekly", "Monthly", "3-Monthly"))
+df.production$cleaning <- factor(df.production$cleaning, levels = c(1,2,3,4), labels = c("Weekly", "Monthly", "3-Monthly", "Never"))
 
 #Growth dataframe: selectie van rijen waar survival >80%
 df.growth <- subset(df.production, survival > 80)
@@ -75,19 +75,19 @@ survival.summary <- data_summary(df.production, varname="survival",
 survival.summary$date <- factor(production.summary$date)
 
 #Bar graphs
-ggplot(production.summary, aes(fill=species, y=SGR, x=date))+
+ggplot(production.summary, aes(fill=cleaning, y=SGR, x=date))+
   geom_bar(position="dodge", stat="identity")+
-  facet_wrap(~species + cleaning + size)+
+  facet_wrap(~species + size)+
   geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
 
-ggplot(growth.summary, aes(fill=species, y=SGR, x=date))+
+ggplot(growth.summary, aes(fill=cleaning, y=SGR, x=date))+
   geom_bar(position="dodge", stat="identity")+
-  facet_wrap(~species + cleaning + size)+
+  facet_wrap(~species + size)+
   geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
 
-ggplot(survival.summary, aes(fill=species, y=survival, x=date))+
+ggplot(survival.summary, aes(fill=cleaning, y=survival, x=date))+
   geom_bar(position="dodge", stat="identity")+
-  facet_wrap(~species + cleaning + size)+
+  facet_wrap(~species + size)+
   geom_errorbar(aes(ymin=survival-se, ymax=survival+se), width=.2, position=position_dodge(.9))
 
 #Gemiddelde surival over groepen:
@@ -117,13 +117,13 @@ ggplot(survival.summary, aes(fill=species, y=survival, x=date))+
 
 
 #per groep
-aggregate(cbind(P.value=Growth$SGR) ~ Growth$size + Growth$species + Growth$cleaning, data = Growth, function(x) shapiro.test(Growth$SGR)$p.value)
-aggregate(cbind(P.value=Production$SGR) ~ Production$size + Production$species + Production$cleaning, data = Production, function(x) shapiro.test(Production$SGR)$p.value
-aggregate(cbind(P.value=Survival_kopie$survival) ~ Survival_kopie$size + Survival_kopie$date + Survival_kopie$cleaning, data = Survival_kopie, function(x) shapiro.test(Survival_kopie$survival)$p.value
+aggregate(cbind(P.value=df.growth$SGR) ~ size + species + cleaning, data = df.growth, function(x) shapiro.test(df.growth$SGR)$p.value)
+aggregate(cbind(P.value=df.production$SGR) ~ size + species + cleaning, data = df.production, function(x) shapiro.test(df.production$SGR)$p.value
+aggregate(cbind(P.value=survival.summary$survival) ~ size + date + cleaning, data = survival.summary, function(x) shapiro.test(survival.summary$survival)$p.value
 
-Survival_kopie %>% group_by(Survival_kopie$cleaning, Survival_kopie$date, Survival_kopie$size) %>% summarise(statistic = shapiro.test(Survival_kopie$survival)$statistic, p.value = shapiro.test(Survival_kopie$survival)$p.value)                     
+survival.summary %>% group_by(cleaning, date, size) %>% summarise(statistic = shapiro.test(survival.summary$survival)$statistic, p.value = shapiro.test(survival.summary$survival)$p.value)                     
            
-kruskal.test(Survival_kopie$survival ~ Survival_kopie$size + Survival_kopie$species + Survival_kopie$date + Survival_kopie$cleaning, data = Survival_kopie)
+kruskal.test(survival.summary$survival ~ size + species + date + cleaning, data = survival.summary)
 
 # ggplots met errorbars
 #ggplot(df.production, aes(fill=Production.size, y=V1, x=Production.date)) + geom_bar(position="dodge", stat="identity") + geom_errorbar(aes(ymin= Production$SGR - sd.production, ymax= Production$SGR + sd.production) + facet_wrap(~Production.species + Production.cleaning)
