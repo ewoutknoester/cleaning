@@ -90,36 +90,6 @@ ggplot(survival.summary, aes(fill=cleaning, y=survival, x=date))+
   facet_wrap(~species + size)+
   geom_errorbar(aes(ymin=survival-se, ymax=survival+se), width=.2, position=position_dodge(.9))
 
-#Gemiddelde surival over groepen:
-#aggregate(cbind(Survival$survival) ~ Survival$size + Survival$species + Survival$date + Survival$cleaning, data = Survival, FUN='mean', na.rm = TRUE)
-#df.survival<- data.frame(aggregate(cbind(Survival$survival) ~ Survival$size + Survival$species + Survival$date + Survival$cleaning, data = Survival, FUN='mean', na.rm = TRUE))
-#aggregate(cbind(Survival_kopie$survival) ~ Survival_kopie$size + Survival_kopie$species + Survival_kopie$date + Survival_kopie$cleaning, data = Survival_kopie, FUN='mean', na.rm = TRUE)
-
-#ggplot(df.survival, aes(fill=Survival.species, y=V1, x=Survival.date)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Survival.species + Survival.cleaning + Survival.size) 
-#sd.survival <-aggregate(cbind(Survival_kopie$survival) ~ Survival_kopie$size + Survival_kopie$species + Survival_kopie$date + Survival_kopie$cleaning, data = Survival_kopie, FUN='sd', na.rm = TRUE)
-
-#Met cleaning en size namen:
-#aggregate(cbind(Survival_kopie$survival) ~ Survival_kopie$size + Survival_kopie$species + Survival_kopie$date + Survival_kopie$cleaning, data = Survival_kopie, FUN='mean', na.rm = TRUE)
-#df.survival_kopie<- data.frame(aggregate(cbind(Survival_kopie$survival) ~ Survival_kopie$size + Survival_kopie$species + Survival_kopie$date + Survival_kopie$cleaning, data = Survival_kopie, FUN='mean', na.rm = TRUE)
-#ggplot(df.survival_kopie, aes(fill=Survival_kopie.species, y=V1, x=Survival_kopie.date)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Survival_kopie.species + Survival_kopie.cleaning + Survival_kopie.size)
-
-#Zelfde grafiek als eerder in excel gemaakt:
-#ggplot(df.survival_kopie, aes(fill=Survival_kopie.size, y=V1, x=Survival_kopie.date)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Survival_kopie.species + Survival_kopie.cleaning)
-#ggplot(df.production, aes(fill=Production.size, y=V1, x=Production.date)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Production.species + Production.cleaning)
-#ggplot(df.growth, aes(fill=Growth.size, y=V1, x=Growth.date)) + geom_bar(position="dodge", stat="identity") + facet_wrap(~Growth.species + Growth.cleaning)
-
-#geom_errorbar(aes(ymin=len-sd, ymax=len+sd)
-
-#Shapiro Wilk
-#shapiro.test(Production$SGR)
-#shapiro.test(Survival_kopie$survival)
-#shapiro.test(df.growth$SGR)
-
-
-#per groep
-aggregate(cbind(P.value=df.growth$SGR) ~ size + species + cleaning, data = df.growth, function(x) shapiro.test(df.growth$SGR)$p.value)
-aggregate(cbind(P.value=df.production$SGR) ~ size + species + cleaning, data = df.production, function(x) shapiro.test(df.production$SGR)$p.value
-aggregate(cbind(P.value=survival.summary$survival) ~ size + date + cleaning, data = survival.summary, function(x) shapiro.test(survival.summary$survival)$p.value
 
 survival.summary %>% group_by(cleaning, date, size) %>% summarise(statistic = shapiro.test(survival.summary$survival)$statistic, p.value = shapiro.test(survival.summary$survival)$p.value)                     
            
@@ -176,4 +146,16 @@ ggplot(df.growth, aes(sample = SGR))+
 Production %>% ggplot(aes(sample = sqrt.production)) + geom_qq() + geom_qq_line() + facet_wrap(~Production$species + Production$cleaning + Production$size, scales = "free_y")
 
 anov.growth <- anova_test(data = Growth, dv = Growth$SGR, wid = id, within = c(Growth$species, Growth$cleaning, Growth$size, Growth$date))
+
+#Shapiro-Wilk test 
+aggregate(cbind(P.value=production.summary$SGR) ~ size + species + cleaning, data = production.summary, function(x) shapiro.test(production.summary$SGR)$p.value)
+aggregate(cbind(P.value=growth.summary$SGR) ~ size + species + cleaning, data = growth.summary, function(x) shapiro.test(growth.summary$SGR)$p.value)
+aggregate(cbind(P.value=survival.summary$survival) ~ size + species + cleaning, data = survival.summary, function(x) shapiro.test(survival.summary$survival)$p.value)
+
+#SGRT transformation
+sqrt_production <- sqrt(production.summary$SGR)
+hist(sqrt_production, col='coral2', main='Square Root Transformed',breaks=100)
+hist(production.summary$SGR, col='coral2', main='Production',breaks=100)
+
+
 
