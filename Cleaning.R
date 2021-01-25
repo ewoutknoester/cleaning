@@ -157,5 +157,9 @@ sqrt_production <- sqrt(production.summary$SGR)
 hist(sqrt_production, col='coral2', main='Square Root Transformed',breaks=100)
 hist(production.summary$SGR, col='coral2', main='Production',breaks=100)
 
+#Non-parametric test for survival
+survival.fried <- survival.summary %>% friedman.test(survival ~ cleaning + species)
+kruskal.test(survival.summary$survival ~ size + species + date + cleaning, data = survival.summary)
 
-
+#Three way anova with repeated measures
+growth.aov <- anova_test(data = growth.summary, dv = SGR, wid = SGR, within = c(species, size, cleaning))
