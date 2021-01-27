@@ -135,15 +135,14 @@ ggplot(df.growth, aes(sample = SGR))+
   stat_qq()+
   facet_wrap(~species + cleaning + size)
 
-#qqnorm(Growth$SGR)
-#qqline(Growth$SGR, col = "steelblue", lwd = 2)
-#qqnorm(Production$SGR)
-#qqline(Production$SGR, col = "steelblue", lwd = 2)
-#qqnorm(Survival_kopie$survival)
-#qqline(Survival_kopie$survival, col = "steelblue", lwd = 2)
+#QQ plots
+qqnorm(Growth$SGR)
+qqline(Growth$SGR, col = "steelblue", lwd = 2)
+qqnorm(Production$SGR)
+qqline(Production$SGR, col = "steelblue", lwd = 2)
+qqnorm(Survival_kopie$survival)
+qqline(Survival_kopie$survival, col = "steelblue", lwd = 2)
 
-#QQ plot transformed data
-Production %>% ggplot(aes(sample = sqrt.production)) + geom_qq() + geom_qq_line() + facet_wrap(~Production$species + Production$cleaning + Production$size, scales = "free_y")
 
 anov.growth <- anova_test(data = Growth, dv = Growth$SGR, wid = id, within = c(Growth$species, Growth$cleaning, Growth$size, Growth$date))
 
@@ -156,10 +155,19 @@ aggregate(cbind(P.value=survival.summary$survival) ~ size + species + cleaning, 
 sqrt_production <- sqrt(production.summary$SGR)
 hist(sqrt_production, col='coral2', main='Square Root Transformed',breaks=100)
 hist(production.summary$SGR, col='coral2', main='Production',breaks=100)
+#QQ plot transformed data
+qqnorm(df.SQRTproduction$sqrt.production.summary.SGR.)
+qqline(df.SQRTproduction$sqrt.production.summary.SGR., col = "steelblue", lwd = 2)
 
 #Non-parametric test for survival
 survival.fried <- survival.summary %>% friedman.test(survival ~ cleaning + species)
 kruskal.test(survival.summary$survival ~ size + species + date + cleaning, data = survival.summary)
+kruskal.test(survival.summary$survival ~ size, data = survival.summary)
+kruskal.test(survival.summary$survival ~ species, data = survival.summary)
+kruskal.test(survival.summary$survival ~ cleaning, data = survival.summary)
+kruskal.test(survival.summary$survival ~ date, data = survival.summary)
 
 #Three way anova with repeated measures
 growth.aov <- anova_test(data = growth.summary, dv = SGR, wid = SGR, within = c(species, size, cleaning))
+production.aov <- anova_test(data = production.summary, dv = SGR, wid = SGR, within = c(species, size, cleaning))
+
