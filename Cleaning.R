@@ -17,6 +17,8 @@ library(car)
 library(multcompView)
 library(lsmeans)
 library(multcomp)
+library(readr)
+library(data.table)
 
 #Load and organize data
 
@@ -31,6 +33,7 @@ library(multcomp)
   df.production$id        <- factor(df.production$id)
   df.production$structure <- factor(df.production$structure)
   df.production$position  <- factor(df.production$position)
+  
 
   #Growth dataframe: selectie van rijen waar survival >80%
   df.growth               <- subset(df.production, survival > 80)
@@ -161,26 +164,26 @@ aggregate(cbind(P.value=growth.summary$SGR) ~ size + species + cleaning, data = 
 aggregate(cbind(P.value=survival.summary$survival) ~ size + species + cleaning, data = survival.summary, function(x) shapiro.test(survival.summary$survival)$p.value)
 
 #SGRT TRANSFORMATION + Bar + Histo + QQ
-df.production <- mutate(df.production, SQRT_SGR = sqrt(abs(SGR)))
+production.summary$SGR <- sqrt(production.summary$SGR)
 
-production.summary.SQRT <- data_summary(df.production, varname="SQRT_SGR", 
+production.summary.SQRT <- data_summary(df.production, varname="SGR", 
                                    groupnames=c("species", "cleaning", "size", "date"))
 
-ggplot(production.summary.SQRT, aes(fill=cleaning, y=SQRT_SGR, x=date))+
+ggplot(production.summary.SQRT, aes(fill=cleaning, y=SGR, x=date))+
   geom_bar(position="dodge", stat="identity")+
   facet_wrap(~species + size)+
-  geom_errorbar(aes(ymin=SQRT_SGR-se, ymax=SQRT_SGR+se), width=.2, position=position_dodge(.9))
+  geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
 
-ggplot(df.production, aes(x = SQRT_SGR))+
-  geom_histogram(aes(fill = SQRT_SGR), position = "identity", bins = 30, alpha = 0.4)+
+ggplot(df.production, aes(x = SGR))+
+  geom_histogram(aes(fill = SGR), position = "identity", bins = 30, alpha = 0.4)+
   facet_wrap(~species + cleaning + size)
 
-ggplot(df.production, aes(sample = SQRT_SGR))+
+ggplot(df.production, aes(sample = SGR))+
   stat_qq()+
   facet_wrap(~species + cleaning + size)
 
 #sqrt_production <- sqrt(production.summary$SGR)
-#production.summary$SGR <- sqrt(production.summary$SGR)
+production.summary$SGR <- sqrt(production.summary$SGR)
 #hist(sqrt_production, col='coral2', main='Square Root Transformed',breaks=100)
 #hist(production.summary$SGR, col='coral2', main='Production',breaks=100)
 
@@ -225,10 +228,10 @@ ggplot(survival.summary.date, aes(fill=date, y=survival, x=date))+
   geom_errorbar(aes(ymin=survival-(2*se), ymax=survival+(2*se), width=.2))
 
 #PRODUCTION (SQRT TRANSFORMED)
-production.summary.tree <- data_summary(df.production, varname="SQRT_SGR", 
+production.summary.tree <- data_summary(df.production, varname="SGR", 
                                         groupnames=c("species", "cleaning", "size", "structure"))
 
-aov.production <- lm(SQRT_SGR ~ cleaning * size * species, data = production.summary.tree)
+aov.production <- lm(SGR ~ cleaning * size * species, data = production.summary.tree)
 hist(residuals(aov.production))
 plot(fitted(aov.production), residuals(aov.production))
 Anova(aov.production, test="F", type="II")
@@ -249,10 +252,41 @@ ggplot(production.summary.size, aes(fill=size, y=SGR, x=size))+
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2))
 cld(lsmeans(aov.production, "size", adjust="tukey"), alpha=.05,  Letters=letters)
 
-#PROUDCTION: simple main size
+#PROUDCTION: simple main species
 production.summary.species <- data_summary(df.production, varname="SGR", 
                                         groupnames=c("species"))
 ggplot(production.summary.species, aes(fill=species, y=SGR, x=species))+
   geom_bar(position="dodge", stat="identity")+
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2))
 cld(lsmeans(aov.production, "species", adjust="tukey"), alpha=.05,  Letters=letters)
+
+#Barplots zonder tijdsaspect
+production.summary.new <- data_summary(df.production, varname="SGR", groupnames=c("species", "cleaning", "size"))
+ggplot(production.summary.new, aes(fill=cleaning, y=SGR, x=size))+
+  geom_bar(position="dodge", stat="identity")+
+  facet_wrap(~species)+
+  geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
+
+growth.summary.new <- data_summary(df.growth, varname="SGR", groupnames=c("species", "cleaning", "size"))
+ggplot(growth.summary.new, aes(fill=cleaning, y=SGR, x=size))+
+  geom_bar(position="dodge", stat="identity")+
+  facet_wrap(~species)+
+  geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
+
+survival.summary.new <- data_summary(df.production, varname="survival", groupnames=c("species", "cleaning", "size"))
+ggplot(survival.summary.new, aes(fill=cleaning, y=survival, x=size))+
+  geom_bar(position="dodge", stat="identity")+
+  facet_wrap(~species)+
+  geom_errorbar(aes(ymin=survival-se, ymax=survival+se), width=.2, position=position_dodge(.9))
+
+#Conclusion ratio 
+df.conclusion <- read_delim("Conclusie.csv",";", escape_double = FALSE, trim_ws = TRUE)
+df.conclusion <- setDT(df.conclusion)
+df.conclusion$species   <- factor(df.conclusion$species, labels = c("Acropora formosa", "Acropora verweyi", "Pocillopora verrucosa", "Porites cylindrica"))
+df.conclusion$size      <- factor(df.conclusion$size, labels = c("small", "normal", "large"))
+df.conclusion$cleaning  <- factor(df.conclusion$cleaning, levels = c(1,2,3,4),labels = c("Weekly", "Monthly", "3-monthly", "Never"))
+df.conclusion$ratio <- factor(df.conclusion$ratio)
+df.conclusion$ratio2 <- factor(df.conclusion$ratio2)
+ggplot(df.conclusion, aes(fill=cleaning, y=ratio2, x=size))+geom_bar(position="dodge", stat="identity")+facet_wrap(~species)
+
+
