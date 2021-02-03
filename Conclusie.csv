@@ -1,0 +1,49 @@
+﻿cleaning;species;size;ratio;ratio2
+Weekly;Acropora formosa;small;3,89;0,26
+Weekly;Acropora formosa;normal;3,55;0,28
+Weekly;Acropora formosa;large;2,48;0,40
+Weekly;Acropora verweyi;small;5,06;0,20
+Weekly;Acropora verweyi;normal;2,41;0,41
+Weekly;Acropora verweyi;large;2,76;0,36
+Weekly;Pocillopora verrucosa;small;0,58;1,72
+Weekly;Pocillopora verrucosa;normal;3,56;0,28
+Weekly;Pocillopora verrucosa;large;2,18;0,46
+Weekly;Porites cylindrica;small;1,35;0,74
+Weekly;Porites cylindrica;normal;5,01;0,20
+Weekly;Porites cylindrica;large;2,64;0,38
+Monthly;Acropora formosa;small;2,11;0,47
+Monthly;Acropora formosa;normal;1,26;0,79
+Monthly;Acropora formosa;large;0,99;1,01
+Monthly;Acropora verweyi;small;9,34;0,11
+Monthly;Acropora verweyi;normal;1,79;0,56
+Monthly;Acropora verweyi;large;1,02;0,98
+Monthly;Pocillopora verrucosa;small;1,15;0,87
+Monthly;Pocillopora verrucosa;normal;1,13;0,88
+Monthly;Pocillopora verrucosa;large;1,05;0,95
+Monthly;Porites cylindrica;small;2,89;0,35
+Monthly;Porites cylindrica;normal;1,18;0,85
+Monthly;Porites cylindrica;large;0,98;1,02
+3-monthly ;Acropora formosa;small;0,65;1,54
+3-monthly ;Acropora formosa;normal;0,77;1,30
+3-monthly ;Acropora formosa;large;0,56;1,79
+3-monthly ;Acropora verweyi;small;3,37;0,30
+3-monthly ;Acropora verweyi;normal;1,36;0,74
+3-monthly ;Acropora verweyi;large;0,69;1,45
+3-monthly ;Pocillopora verrucosa;small;1,06;0,94
+3-monthly ;Pocillopora verrucosa;normal;0,64;1,56
+3-monthly ;Pocillopora verrucosa;large;0,59;1,69
+3-monthly ;Porites cylindrica;small;2,41;0,41
+3-monthly ;Porites cylindrica;normal;2,45;0,41
+3-monthly ;Porites cylindrica;large;2,07;0,48
+Never;Acropora formosa;small;0,94;1,06
+Never;Acropora formosa;normal;0,27;3,70
+Never;Acropora formosa;large;0,24;4,17
+Never;Acropora verweyi;small;1,07;0,93
+Never;Acropora verweyi;normal;0,41;2,44
+Never;Acropora verweyi;large;0,24;4,17
+Never;Pocillopora verrucosa;small;0,46;2,17
+Never;Pocillopora verrucosa;normal;0,41;2,44
+Never;Pocillopora verrucosa;large;0,28;3,57
+Never;Porites cylindrica;small;0,36;2,78
+Never;Porites cylindrica;normal;0,91;1,10
+Never;Porites cylindrica;large;0,57;1,75
