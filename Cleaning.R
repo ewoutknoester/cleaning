@@ -280,13 +280,13 @@ ggplot(survival.summary.new, aes(fill=cleaning, y=survival, x=size))+
   geom_errorbar(aes(ymin=survival-se, ymax=survival+se), width=.2, position=position_dodge(.9))
 
 #Conclusion ratio 
-df.conclusion <- read_delim("Conclusie.csv",";", escape_double = FALSE, trim_ws = TRUE)
+df.conclusion <- read_delim("Conclusion.csv",";", escape_double = FALSE, trim_ws = TRUE)
 df.conclusion <- setDT(df.conclusion)
 df.conclusion$species   <- factor(df.conclusion$species, labels = c("Acropora formosa", "Acropora verweyi", "Pocillopora verrucosa", "Porites cylindrica"))
-df.conclusion$size      <- factor(df.conclusion$size, labels = c("small", "normal", "large"))
-df.conclusion$cleaning  <- factor(df.conclusion$cleaning, levels = c(1,2,3,4),labels = c("Weekly", "Monthly", "3-monthly", "Never"))
+df.conclusion$size      <- factor(df.conclusion$size, levels = c("small", "normal", "large"), labels = c("small", "normal", "large"))
+df.conclusion$cleaning  <- factor(df.conclusion$cleaning,levels = c("Weekly", "Monthly", "3-monthly", "Never"),labels = c("Weekly", "Monthly", "3-monthly", "Never"))
 df.conclusion$ratio <- factor(df.conclusion$ratio)
 df.conclusion$ratio2 <- factor(df.conclusion$ratio2)
-ggplot(df.conclusion, aes(fill=cleaning, y=ratio2, x=size))+geom_bar(position="dodge", stat="identity")+facet_wrap(~species)
+ggplot(df.conclusion, aes(fill=cleaning, y=ratio, x=size))+geom_bar(position="dodge", stat="identity")+facet_wrap(~species)
 
 
