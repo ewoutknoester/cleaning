@@ -7,6 +7,7 @@
 # Set R and packages
 rm(list=ls()) #Clear workspace
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set directory 
+#Load and organize data
 library(plyr)
 library(dplyr)
 library(data.table)
@@ -19,8 +20,6 @@ library(lsmeans)
 library(multcomp)
 library(readr)
 library(data.table)
-
-#Load and organize data
 
   #Volledige Productie dataframe
   df.production <- read.csv("Production.csv", check.names = FALSE, header = TRUE)
@@ -60,7 +59,7 @@ production.summary <- data_summary(df.production, varname="SGR",
                     groupnames=c("species", "cleaning", "size", "date"))
 production.summary$date <- factor(production.summary$date)
 
-growth.summary <- data_summary(df.growth, varname="SGR", 
+growth.summary <- data_summary(df.growth, varname='SGR', 
                                    groupnames=c("species", "cleaning", "size", "date"))
 growth.summary$date <- factor(growth.summary$date)
 
@@ -69,9 +68,9 @@ survival.summary <- data_summary(df.production, varname="survival",
 survival.summary$date <- factor(production.summary$date)
 
 #Bar graphs
-ggplot(production.summary, aes(fill=cleaning, y=SGR, x=date))+
+ggplot(production.summary, aes(fill=cleaning, y=SGR, x=size))+
   geom_bar(position="dodge", stat="identity")+
-  facet_wrap(~species + size)+
+  facet_wrap(~species)+
   geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
 
 ggplot(growth.summary, aes(fill=cleaning, y=SGR, x=date))+
@@ -136,9 +135,9 @@ production.summary$SGR <- sqrt(production.summary$SGR)
 production.summary.SQRT <- data_summary(df.production, varname="SGR", 
                                    groupnames=c("species", "cleaning", "size", "date"))
 
-ggplot(production.summary.SQRT, aes(fill=cleaning, y=SGR, x=date))+
+ggplot(production.summary.SQRT, aes(fill=cleaning, y=SGR, x=size))+
   geom_bar(position="dodge", stat="identity")+
-  facet_wrap(~species + size)+
+  facet_wrap(~species)+
   geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9))
 
 ggplot(df.production, aes(x = SGR))+
@@ -206,7 +205,7 @@ production.summary.cleaning <- data_summary(df.production, varname="SGR",
 ggplot(production.summary.cleaning , aes(fill=cleaning, y=SGR, x=cleaning))+
   geom_bar(position="dodge", stat="identity")+
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2)) + 
-  theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
+  theme(axis.text = element_text(size = 18),legend.title=element_text(size=20), legend.text=element_text(size=20), axis.title.x = element_text(size=18),axis.title.y = element_text(size=18), strip.text =  element_text(size=14))
 cld(lsmeans(aov.production, "cleaning", adjust="tukey"), alpha=.05,  Letters=letters)
 
 #PROUDCTION: simple main size
@@ -215,7 +214,7 @@ production.summary.size <- data_summary(df.production, varname="SGR",
 ggplot(production.summary.size, aes(fill=size, y=SGR, x=size))+
   geom_bar(position="dodge", stat="identity")+
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2)) + 
-  theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
+  theme(axis.text = element_text(size = 18),legend.title=element_text(size=20), legend.text=element_text(size=20), axis.title.x = element_text(size=18),axis.title.y = element_text(size=18), strip.text =  element_text(size=14))
 cld(lsmeans(aov.production, "size", adjust="tukey"), alpha=.05,  Letters=letters)
 
 #PROUDCTION: simple main species
@@ -224,7 +223,7 @@ production.summary.species <- data_summary(df.production, varname="SGR",
 ggplot(production.summary.species, aes(fill=species, y=SGR, x=species))+
   geom_bar(position="dodge", stat="identity")+
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2)) + 
-  theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
+  theme(axis.text = element_text(size = 18),legend.title=element_text(size=20), legend.text=element_text(size=20), axis.title.x = element_text(size=18),axis.title.y = element_text(size=18), strip.text =  element_text(size=14))
 tukey_p.species <- cld(lsmeans(aov.production, "species", adjust="tukey"), alpha=.05,  Letters=letters)
 geom_text(data=tukey_p.species,aes(label=tukey_p.species$.group),vjust=0)
 
@@ -234,7 +233,7 @@ ggplot(production.summary.new, aes(fill=cleaning, y=SGR, x=size))+
   geom_bar(position="dodge", stat="identity")+
   facet_wrap(~species)+
   geom_errorbar(aes(ymin=SGR-se, ymax=SGR+se), width=.2, position=position_dodge(.9)) + 
-  theme(axis.text = element_text(size = 11),legend.title=element_text(size=14), legend.text=element_text(size=13), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
+  theme(axis.text = element_text(size = 18),legend.title=element_text(size=20), legend.text=element_text(size=20), axis.title.x = element_text(size=18),axis.title.y = element_text(size=18), strip.text =  element_text(size=14))
 
 growth.summary.new <- data_summary(df.growth, varname="SGR", groupnames=c("species", "cleaning", "size"))
 ggplot(growth.summary.new, aes(fill=cleaning, y=SGR, x=size))+
@@ -250,15 +249,22 @@ ggplot(survival.summary.new, aes(fill=cleaning, y=survival, x=size))+
   geom_errorbar(aes(ymin=survival-se, ymax=survival+se), width=.2, position=position_dodge(.9))
 
 #Conclusion ratio 
-df.conclusion <- read_delim("Conclusion.csv",";", escape_double = FALSE, trim_ws = TRUE)
+library(readr)
+df.conclusion <- read_delim("Conclusion new.csv", 
+                         ";", escape_double = FALSE, col_types = cols(ratio = col_number()), 
+                         trim_ws = TRUE)
 df.conclusion <- setDT(df.conclusion)
-df.conclusion$species   <- factor(df.conclusion$species, labels = c("Acropora formosa", "Acropora verweyi", "Pocillopora verrucosa", "Porites cylindrica"))
-df.conclusion$size      <- factor(df.conclusion$size, levels = c("small", "normal", "large"), labels = c("small", "normal", "large"))
-df.conclusion$cleaning  <- factor(df.conclusion$cleaning,levels = c("Weekly", "Monthly", "3-monthly", "Never"),labels = c("Weekly", "Monthly", "3-monthly", "Never"))
-df.conclusion$ratio <- factor(df.conclusion$ratio)
-ggplot(df.conclusion, aes_(fill=df.conclusion$cleaning, x=df.conclusion$size, y=df.conclusion$ratio)+geom_bar(position="dodge", stat="identity")+facet_wrap(~df.conclusion$species))+
-theme(axis.text = element_text(size = 10),legend.title=element_text(size=14), legend.text=element_text(size=13), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
-scale_y_continuous(breaks = seq(0, 6.5, len = 0.5))
+species   <- factor(df.conclusion$species, labels = c("Acropora formosa", "Acropora verweyi", "Pocillopora verrucosa", "Porites cylindrica"))
+size      <- factor(df.conclusion$size, levels = c("small", "normal", "large"), labels = c("small", "normal", "large"))
+cleaning  <- factor(df.conclusion$cleaning,levels = c("Weekly", "Monthly", "3-monthly", "Never"),labels = c("Weekly", "Monthly", "3-monthly", "Never"))
+ratio <- factor(df.conclusion$ratio)
+library(DescTools)
+df.conclusion$cleaning <- reorder(cleaning, new.order=c("Weekly", "Monthly", "3-monthly", "Never"))
+df.conclusion$size <- reorder(size, new.order=c("small", "normal", "large"))
+ggplot(df.conclusion, aes(fill=cleaning, x=size, y=ratio))+
+  geom_bar(position="dodge", stat="identity")+facet_wrap(~species)+
+  theme(axis.text = element_text(size = 18),legend.title=element_text(size=18), legend.text=element_text(size=18), axis.title.x = element_text(size=18),axis.title.y = element_text(size=18), strip.text =  element_text(size=14))+
+  scale_y_continuous(breaks=c(0,1,2,3,4,5,6,7,8,9,10))
 
 #post hoc 2-way interactions
 #size:species
@@ -267,7 +273,12 @@ ggplot(production.summary , aes(fill=size, y=SGR, x=size))+
   facet_wrap(~species)+ 
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2)) + 
   theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
-cld(lsmeans(aov.production, 'size' , 'species', adjust="tukey"), alpha=.05,  Letters=letters)
+size.species <- cld(lsmeans(aov.production, 'size' , 'species', adjust="tukey"), alpha=.05,  Letters=letters)
+ggplot(size.species , aes(fill=size, y=lsmean, x=size))+
+  geom_bar(position="dodge", stat="identity")+
+  facet_wrap(~species)+ 
+  geom_errorbar(aes(ymin=lsmean-(2*SE), ymax=lsmean+(2*SE), width=.2)) + 
+  theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
 
 #cleaning:species
 ggplot(production.summary , aes(fill=cleaning, y=SGR, x=cleaning))+
@@ -275,7 +286,12 @@ ggplot(production.summary , aes(fill=cleaning, y=SGR, x=cleaning))+
   facet_wrap(~species)+ 
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2)) + 
   theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
-cld(lsmeans(aov.production, 'cleaning' , 'species', adjust="tukey"), alpha=.05,  Letters=letters)
+cleaning.species<-cld(lsmeans(aov.production, 'cleaning' , 'species', adjust="tukey"), alpha=.05,  Letters=letters)
+ggplot(cleaning.species , aes(fill=cleaning, y=lsmean, x=cleaning))+
+  geom_bar(position="dodge", stat="identity")+
+  facet_wrap(~species)+ 
+  geom_errorbar(aes(ymin=lsmean-(2*SE), ymax=lsmean+(2*SE), width=.2)) + 
+  theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
 
 #cleaning:size
 ggplot(production.summary , aes(fill=cleaning, y=SGR, x=cleaning))+
@@ -283,9 +299,10 @@ ggplot(production.summary , aes(fill=cleaning, y=SGR, x=cleaning))+
   facet_wrap(~species)+ 
   geom_errorbar(aes(ymin=SGR-(2*se), ymax=SGR+(2*se), width=.2)) + 
   theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
-cld(lsmeans(aov.production, 'cleaning' , 'size', adjust="tukey"), alpha=.05,  Letters=letters)
-
-
-
-
-
+cleaning.size<-cld(lsmeans(aov.production, 'cleaning' , 'size', adjust="tukey"), alpha=.05,  Letters=letters)
+ggplot(cleaning.size , aes(fill=cleaning, y=lsmean, x=cleaning))+
+  geom_bar(position="dodge", stat="identity")+
+  facet_wrap(~size)+ 
+  geom_errorbar(aes(ymin=lsmean-(2*SE), ymax=lsmean+(2*SE), width=.2)) + 
+  theme(axis.text = element_text(size = 14),legend.title=element_text(size=16), legend.text=element_text(size=16), axis.title.x = element_text(size=14),axis.title.y = element_text(size=14), strip.text =  element_text(size=12))
+geom_text(data=cleaning.size,aes(label=.group),vjust=1)
